@@ -23,7 +23,7 @@
 		F7806C5D2518F2B4002F703B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F7806C5F2518F2B5002F703B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7806C622518F2B5002F703B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		F7806C642518F2B5002F703B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F7806C642518F2B5002F703B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = InteractiveSwitch/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +56,31 @@
 		F7806C552518F2B4002F703B /* InteractiveSwitch */ = {
 			isa = PBXGroup;
 			children = (
-				F7806C562518F2B4002F703B /* AppDelegate.swift */,
-				F7806C582518F2B4002F703B /* SceneDelegate.swift */,
+				F7806C6B2518F30A002F703B /* AppDelegate */,
 				F7806C5A2518F2B4002F703B /* ViewController.swift */,
 				F7806C5C2518F2B4002F703B /* Main.storyboard */,
+				F7806C6A2518F2F4002F703B /* Resources */,
+			);
+			path = InteractiveSwitch;
+			sourceTree = "<group>";
+		};
+		F7806C6A2518F2F4002F703B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				F7806C5F2518F2B5002F703B /* Assets.xcassets */,
 				F7806C612518F2B5002F703B /* LaunchScreen.storyboard */,
 				F7806C642518F2B5002F703B /* Info.plist */,
 			);
-			path = InteractiveSwitch;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F7806C6B2518F30A002F703B /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				F7806C562518F2B4002F703B /* AppDelegate.swift */,
+				F7806C582518F2B4002F703B /* SceneDelegate.swift */,
+			);
+			path = AppDelegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,7 +302,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AH2JSYW82G;
-				INFOPLIST_FILE = InteractiveSwitch/Info.plist;
+				INFOPLIST_FILE = InteractiveSwitch/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -304,7 +320,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AH2JSYW82G;
-				INFOPLIST_FILE = InteractiveSwitch/Info.plist;
+				INFOPLIST_FILE = InteractiveSwitch/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
