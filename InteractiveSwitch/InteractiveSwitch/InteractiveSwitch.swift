@@ -12,11 +12,10 @@ final class InteractiveSwitch: UIControl {
     
     private var isOn: Bool = false {
         didSet {
-            guard isOn != oldValue else { return }
             updateState()
         }
     }
-    
+
     
     private var onLabel: UILabel!
     private var offLabel: UILabel!
@@ -31,6 +30,22 @@ final class InteractiveSwitch: UIControl {
         view.backgroundColor = .white
         view.pin(to: [.top, .bottom], of: self, offset: 5)
         view.setWidth(50)
+        return view
+    }()
+    
+    private lazy var redView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.layer.cornerRadius = bounds.height * 0.25
+        view.add(to: self)
+        return view
+    }()
+    
+    private lazy var greenView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .green
+        view.layer.cornerRadius = bounds.height * 0.25
+        view.add(to: self)
         return view
     }()
     
@@ -49,8 +64,6 @@ final class InteractiveSwitch: UIControl {
         super.layoutSubviews()
         layer.cornerRadius = bounds.height * 0.25
         togglView.layer.cornerRadius = togglView.bounds.height * 0.25
-        
-
     }
     
     private func setup() {
@@ -58,6 +71,7 @@ final class InteractiveSwitch: UIControl {
         
         setTap()
         setPan()
+        setBackViews()
         setLabels()
         setToggleConstraint()
         
@@ -83,6 +97,11 @@ final class InteractiveSwitch: UIControl {
         addGestureRecognizer(pan)
     }
     
+    private func setBackViews() {
+        greenView.alpha = 0
+        redView.alpha = 1
+    }
+    
     private func setLabels() {
         onLabel = makeLabel(text: Constants.isOn)
         offLabel = makeLabel(text: Constants.isOff)
@@ -99,6 +118,7 @@ final class InteractiveSwitch: UIControl {
     private func setToggleConstraint() {
         toggleViewConstraint = togglView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5)
         toggleViewConstraint?.isActive = true
+        bringSubviewToFront(togglView)
     }
     
     @objc private func tapReceived() {
@@ -106,20 +126,17 @@ final class InteractiveSwitch: UIControl {
     }
     
     @objc private func panReceived(sender: UIPanGestureRecognizer) {
-        let isMovingRight = sender.velocity(in: self).x > 0
-        
-        print(sender.translation(in: self).x)
+    
         let positionChange = sender.translation(in: self).x
         
         let currentPosition = toggleViewConstraint?.constant ?? 5
         
-        
-        
+        let onAlpha = (currentPosition + positionChange) / endTogglePosition
+        let offAlpha = (endTogglePosition - (currentPosition + positionChange) ) / endTogglePosition
         
         switch sender.state {
-        case .began:
-            print("began")
-        case .changed:
+        case .changed, .began:
+            
             if currentPosition + positionChange >= endTogglePosition {
                 toggleViewConstraint?.constant = endTogglePosition
             } else if currentPosition + positionChange <= 5 {
@@ -129,21 +146,17 @@ final class InteractiveSwitch: UIControl {
             }
             
             sender.setTranslation(.zero, in: self)
-            
-            
-            let alphaPercentage = (endTogglePosition - (currentPosition + positionChange) ) / endTogglePosition
 
-            
             UIView.animate(withDuration: 0.3) {
                 self.layoutIfNeeded()
-                
-                //self.backgroundColor = self.isOn ? .green : .red
-                self.offLabel.alpha = alphaPercentage
-                self.onLabel.alpha = (currentPosition + positionChange) / self.endTogglePosition
+                self.offLabel.alpha = offAlpha
+                self.redView.alpha = offAlpha
+                self.onLabel.alpha = onAlpha
+                self.greenView.alpha = onAlpha
             }
-            
         case .ended:
-            print("ended") // докрутить перемотку в ту или иную позицию
+            let isOn = onAlpha >= offAlpha
+            self.isOn = isOn
         default:
             break
         }
@@ -158,7 +171,8 @@ final class InteractiveSwitch: UIControl {
         self.toggleViewConstraint.constant = CGFloat(constant)
 
         UIView.animate(withDuration: 0.3) {
-            self.backgroundColor = self.isOn ? .green : .red
+            self.greenView.alpha = self.isOn ? 1 : 0
+            self.redView.alpha = self.isOn ? 0 : 1
             self.offLabel.alpha = self.isOn ? 0 : 1
             self.onLabel.alpha = self.isOn ? 1 : 0
             self.layoutIfNeeded()
