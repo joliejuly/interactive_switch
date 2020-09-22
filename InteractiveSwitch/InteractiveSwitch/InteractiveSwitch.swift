@@ -22,6 +22,10 @@ final class InteractiveSwitch: UIControl {
     private var offLabel: UILabel!
     private var toggleViewConstraint: NSLayoutConstraint!
     
+    private var endTogglePosition: CGFloat {
+        bounds.width - togglView.bounds.width - 5
+    }
+    
     private lazy var togglView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -53,6 +57,7 @@ final class InteractiveSwitch: UIControl {
         backgroundColor = .red
         
         setTap()
+        setPan()
         setLabels()
         setToggleConstraint()
         
@@ -70,6 +75,12 @@ final class InteractiveSwitch: UIControl {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapReceived))
         tap.cancelsTouchesInView = false
         addGestureRecognizer(tap)
+    }
+    
+    private func setPan() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(panReceived))
+        pan.cancelsTouchesInView = false
+        addGestureRecognizer(pan)
     }
     
     private func setLabels() {
@@ -94,9 +105,55 @@ final class InteractiveSwitch: UIControl {
         isOn.toggle()
     }
     
+    @objc private func panReceived(sender: UIPanGestureRecognizer) {
+        let isMovingRight = sender.velocity(in: self).x > 0
+        
+        print(sender.translation(in: self).x)
+        let positionChange = sender.translation(in: self).x
+        
+        let currentPosition = toggleViewConstraint?.constant ?? 5
+        
+        
+        
+        
+        switch sender.state {
+        case .began:
+            print("began")
+        case .changed:
+            if currentPosition + positionChange >= endTogglePosition {
+                toggleViewConstraint?.constant = endTogglePosition
+            } else if currentPosition + positionChange <= 5 {
+                toggleViewConstraint?.constant = 5
+            } else {
+                toggleViewConstraint?.constant = currentPosition + positionChange
+            }
+            
+            sender.setTranslation(.zero, in: self)
+            
+            
+            let alphaPercentage = (endTogglePosition - (currentPosition + positionChange) ) / endTogglePosition
+
+            
+            UIView.animate(withDuration: 0.3) {
+                self.layoutIfNeeded()
+                
+                //self.backgroundColor = self.isOn ? .green : .red
+                self.offLabel.alpha = alphaPercentage
+                self.onLabel.alpha = (currentPosition + positionChange) / self.endTogglePosition
+            }
+            
+        case .ended:
+            print("ended") // докрутить перемотку в ту или иную позицию
+        default:
+            break
+        }
+        
+        
+    }
+    
     private func updateState() {
         
-        let constant = isOn ? bounds.width - togglView.bounds.width - 5 : 5
+        let constant = isOn ? endTogglePosition : 5
         
         self.toggleViewConstraint.constant = CGFloat(constant)
 
