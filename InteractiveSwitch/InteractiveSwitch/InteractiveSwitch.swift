@@ -16,7 +16,6 @@ final class InteractiveSwitch: UIControl {
         }
     }
 
-    
     private var onLabel: UILabel!
     private var offLabel: UILabel!
     private var toggleViewConstraint: NSLayoutConstraint!
@@ -94,7 +93,7 @@ final class InteractiveSwitch: UIControl {
     private func setPan() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panReceived))
         pan.cancelsTouchesInView = false
-        addGestureRecognizer(pan)
+        togglView.addGestureRecognizer(pan)
     }
     
     private func setBackViews() {
@@ -127,14 +126,14 @@ final class InteractiveSwitch: UIControl {
     
     @objc private func panReceived(sender: UIPanGestureRecognizer) {
         
-        defer { sender.setTranslation(.zero, in: self) }
+        defer { sender.setTranslation(.zero, in: togglView) }
         
-        let velocity = sender.velocity(in: self).x
+        let velocity = sender.velocity(in: togglView).x
         
         // set swipe
         let velocityCoefficient = abs(velocity) > 700 ? velocity : 0
         
-        let positionChange = sender.translation(in: self).x
+        let positionChange = sender.translation(in: togglView).x
         let normalizedPositionChange = (positionChange + velocityCoefficient) * 1.2
         
         
