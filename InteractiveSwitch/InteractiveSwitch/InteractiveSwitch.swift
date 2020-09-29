@@ -126,8 +126,17 @@ final class InteractiveSwitch: UIControl {
     }
     
     @objc private func panReceived(sender: UIPanGestureRecognizer) {
-    
+        
+        defer { sender.setTranslation(.zero, in: self) }
+        
+        let velocity = sender.velocity(in: self).x
+        
+        // set swipe
+        let velocityCoefficient = abs(velocity) > 700 ? velocity : 0
+        
         let positionChange = sender.translation(in: self).x
+        let normalizedPositionChange = (positionChange + velocityCoefficient) * 1.2
+        
         
         let currentPosition = toggleViewConstraint?.constant ?? 5
         
@@ -137,15 +146,13 @@ final class InteractiveSwitch: UIControl {
         switch sender.state {
         case .changed, .began:
             
-            if currentPosition + positionChange >= endTogglePosition {
+            if currentPosition + normalizedPositionChange >= endTogglePosition {
                 toggleViewConstraint?.constant = endTogglePosition
-            } else if currentPosition + positionChange <= 5 {
+            } else if currentPosition + normalizedPositionChange <= 5 {
                 toggleViewConstraint?.constant = 5
             } else {
-                toggleViewConstraint?.constant = currentPosition + positionChange
+                toggleViewConstraint?.constant = currentPosition + normalizedPositionChange
             }
-            
-            sender.setTranslation(.zero, in: self)
 
             UIView.animate(withDuration: 0.3) {
                 self.layoutIfNeeded()
@@ -160,14 +167,11 @@ final class InteractiveSwitch: UIControl {
         default:
             break
         }
-        
-        
     }
     
     private func updateState() {
         
         let constant = isOn ? endTogglePosition : 5
-        
         self.toggleViewConstraint.constant = CGFloat(constant)
 
         UIView.animate(withDuration: 0.3) {
@@ -178,8 +182,6 @@ final class InteractiveSwitch: UIControl {
             self.layoutIfNeeded()
         }
     }
-    
-    
 }
 
 extension InteractiveSwitch {
@@ -188,6 +190,5 @@ extension InteractiveSwitch {
         static let isOn = "I'm on!"
         static let isOff = "I'm off!"
     }
-    
 }
 
