@@ -1,5 +1,7 @@
 import UIKit
 
+// source: https://github.com/Moonko/RACharts/tree/master/TGChart/Presentation/Chart/Animator
+
 protocol Animatable: Equatable {
     static func + (lhs: Self, rhs: Self) -> Self
     static func - (lhs: Self, rhs: Self) -> Self
