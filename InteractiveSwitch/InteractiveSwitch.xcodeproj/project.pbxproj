@@ -15,6 +15,8 @@
 		F7806C632518F2B5002F703B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7806C612518F2B5002F703B /* LaunchScreen.storyboard */; };
 		F7806C6D2518F350002F703B /* InteractiveSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7806C6C2518F350002F703B /* InteractiveSwitch.swift */; };
 		F7CE24C42518F7CD00A96C15 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CE24C32518F7CD00A96C15 /* UIView+Constraints.swift */; };
+		F7FEBF452524E73300CACF24 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FEBF422524E73300CACF24 /* Animator.swift */; };
+		F7FEBF462524E73300CACF24 /* AlphaAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FEBF432524E73300CACF24 /* AlphaAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F7806C642518F2B5002F703B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = InteractiveSwitch/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		F7806C6C2518F350002F703B /* InteractiveSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveSwitch.swift; sourceTree = "<group>"; };
 		F7CE24C32518F7CD00A96C15 /* UIView+Constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Constraints.swift"; sourceTree = "<group>"; };
+		F7FEBF422524E73300CACF24 /* Animator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
+		F7FEBF432524E73300CACF24 /* AlphaAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,7 @@
 				F7806C6B2518F30A002F703B /* AppDelegate */,
 				F7CE24C52518F7D600A96C15 /* Extensions */,
 				F7806C5A2518F2B4002F703B /* ViewController.swift */,
+				F7FEBF402524E73300CACF24 /* Animator */,
 				F7806C5C2518F2B4002F703B /* Main.storyboard */,
 				F7806C6C2518F350002F703B /* InteractiveSwitch.swift */,
 				F7806C6A2518F2F4002F703B /* Resources */,
@@ -95,6 +100,15 @@
 				F7CE24C32518F7CD00A96C15 /* UIView+Constraints.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F7FEBF402524E73300CACF24 /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				F7FEBF422524E73300CACF24 /* Animator.swift */,
+				F7FEBF432524E73300CACF24 /* AlphaAnimator.swift */,
+			);
+			path = Animator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,7 +186,9 @@
 				F7806C5B2518F2B4002F703B /* ViewController.swift in Sources */,
 				F7CE24C42518F7CD00A96C15 /* UIView+Constraints.swift in Sources */,
 				F7806C572518F2B4002F703B /* AppDelegate.swift in Sources */,
+				F7FEBF452524E73300CACF24 /* Animator.swift in Sources */,
 				F7806C592518F2B4002F703B /* SceneDelegate.swift in Sources */,
+				F7FEBF462524E73300CACF24 /* AlphaAnimator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

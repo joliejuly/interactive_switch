@@ -8,7 +8,45 @@
 
 import UIKit
 
-final class InteractiveSwitch: UIControl {
+final class InteractiveSwitchWithAnimator: InteractiveSwitch {
+
+    override func setup(shouldActivateToggleConstraints: Bool = true) {
+        super.setup(shouldActivateToggleConstraints: false)
+        
+        toggleLayer.frame = CGRect(x: 5, y: 5, width: 50, height: self.bounds.height - 10)
+        toggleLayer.cornerRadius = toggleLayer.frame.height * 0.25
+        toggleLayer.backgroundColor = UIColor.white.cgColor
+
+        layer.addSublayer(toggleLayer)
+    }
+    
+    override func animateToggleView(to position: CGFloat) {
+        let animator = AlphaAnimator { [weak self] updatedValue in
+            self?.toggleLayer.frame.origin.x = updatedValue
+        }
+        animator.animate(toggleLayer.frame.origin.x, toValue: position)
+        #warning("почему дефолтная анимация CALayer выглядит рваной?")
+        // toggleLayer.frame.origin.x = position
+    }
+    
+    override func animate(duration: Double, onAlpha: CGFloat, offAlpha: CGFloat) {
+        let onAnimator = AlphaAnimator { [weak self] updatedValue in
+            self?.onLabel.alpha = updatedValue
+            self?.greenView.alpha = updatedValue
+        }
+        
+        let offAnimator = AlphaAnimator { [weak self] updatedValue in
+            self?.offLabel.alpha = updatedValue
+            self?.redView.alpha = updatedValue
+        }
+        offAnimator.animate(self.offLabel.alpha, toValue: offAlpha)
+        offAnimator.animate(self.redView.alpha, toValue: offAlpha)
+        onAnimator.animate(self.onLabel.alpha, toValue: onAlpha)
+        onAnimator.animate(self.greenView.alpha, toValue: onAlpha)
+    }
+}
+
+class InteractiveSwitch: UIControl {
     
     private var isOn: Bool = false {
         didSet {
@@ -16,23 +54,25 @@ final class InteractiveSwitch: UIControl {
         }
     }
 
-    private var onLabel: UILabel!
-    private var offLabel: UILabel!
-    private var toggleViewConstraint: NSLayoutConstraint!
+    fileprivate var onLabel: UILabel!
+    fileprivate var offLabel: UILabel!
+    fileprivate var toggleViewConstraint: NSLayoutConstraint!
     
-    private var endTogglePosition: CGFloat {
-        bounds.width - togglView.bounds.width - 5
+    fileprivate var endTogglePosition: CGFloat {
+        var toggleWidth = togglView.bounds.width
+        toggleWidth = toggleWidth == 0 ? toggleLayer.frame.width : toggleWidth
+        return bounds.width - toggleWidth - 5
     }
     
-    private lazy var togglView: UIView = {
+    fileprivate let toggleLayer = CALayer()
+    
+    fileprivate lazy var togglView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.pin(to: [.top, .bottom], of: self, offset: 5)
-        view.setWidth(50)
         return view
     }()
     
-    private lazy var redView: UIView = {
+    fileprivate lazy var redView: UIView = {
         let view = UIView()
         view.backgroundColor = .red
         view.layer.cornerRadius = bounds.height * 0.25
@@ -40,7 +80,7 @@ final class InteractiveSwitch: UIControl {
         return view
     }()
     
-    private lazy var greenView: UIView = {
+    fileprivate lazy var greenView: UIView = {
         let view = UIView()
         view.backgroundColor = .green
         view.layer.cornerRadius = bounds.height * 0.25
@@ -65,15 +105,31 @@ final class InteractiveSwitch: UIControl {
         togglView.layer.cornerRadius = togglView.bounds.height * 0.25
     }
     
-    private func setup() {
+    fileprivate func animateToggleView(to position: CGFloat) {
+        toggleViewConstraint?.constant = position
+    }
+    
+    fileprivate func animate(duration: Double, onAlpha: CGFloat, offAlpha: CGFloat) {
+        UIView.animate(withDuration: duration) {
+            self.layoutIfNeeded()
+            self.offLabel.alpha = offAlpha
+            self.redView.alpha = offAlpha
+            self.onLabel.alpha = onAlpha
+            self.greenView.alpha = onAlpha
+        }
+    }
+    
+    fileprivate func setup(shouldActivateToggleConstraints: Bool = true) {
         backgroundColor = .red
         
         setTap()
         setPan()
         setBackViews()
         setLabels()
-        setToggleConstraint()
         
+        if shouldActivateToggleConstraints {
+            setToggleConstraint()
+        }
     }
     
     private func makeLabel(text: String) -> UILabel {
@@ -86,14 +142,12 @@ final class InteractiveSwitch: UIControl {
     
     private func setTap() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapReceived))
-        tap.cancelsTouchesInView = false
         addGestureRecognizer(tap)
     }
     
     private func setPan() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panReceived))
-        pan.cancelsTouchesInView = false
-        togglView.addGestureRecognizer(pan)
+        self.addGestureRecognizer(pan)
     }
     
     private func setBackViews() {
@@ -115,6 +169,10 @@ final class InteractiveSwitch: UIControl {
     }
     
     private func setToggleConstraint() {
+        
+        togglView.pin(to: [.top, .bottom], of: self, offset: 5)
+        togglView.setWidth(50)
+        
         toggleViewConstraint = togglView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5)
         toggleViewConstraint?.isActive = true
         bringSubviewToFront(togglView)
@@ -137,22 +195,25 @@ final class InteractiveSwitch: UIControl {
         let normalizedPositionChange = (positionChange + velocityCoefficient) * 1.2
         
         
-        let currentPosition = toggleViewConstraint?.constant ?? 5
+        var currentPosition = toggleViewConstraint?.constant ?? togglView.frame.origin.x
+        currentPosition = currentPosition == 0 ? toggleLayer.frame.origin.x : currentPosition
+        
         
         let onAlpha = (currentPosition + positionChange) / endTogglePosition
         let offAlpha = (endTogglePosition - (currentPosition + positionChange) ) / endTogglePosition
         
         switch sender.state {
         case .changed, .began:
-            
+            var newPosition: CGFloat
             if currentPosition + normalizedPositionChange >= endTogglePosition {
-                toggleViewConstraint?.constant = endTogglePosition
+                newPosition = endTogglePosition
             } else if currentPosition + normalizedPositionChange <= 5 {
-                toggleViewConstraint?.constant = 5
+                newPosition = 5
             } else {
-                toggleViewConstraint?.constant = currentPosition + normalizedPositionChange
+                newPosition = currentPosition + normalizedPositionChange
             }
-            animate(onAlpha: onAlpha, offAlpha: offAlpha)
+            animateToggleView(to: newPosition)
+            animate(duration: 0.1, onAlpha: onAlpha, offAlpha: offAlpha)
 
         case .ended:
             let isOn = onAlpha >= offAlpha
@@ -165,19 +226,10 @@ final class InteractiveSwitch: UIControl {
     private func updateState() {
         
         let constant = isOn ? endTogglePosition : 5
-        self.toggleViewConstraint.constant = CGFloat(constant)
+        toggleViewConstraint?.constant = CGFloat(constant)
+        toggleLayer.frame.origin.x = constant
 
-        animate(onAlpha: isOn ? 1 : 0, offAlpha: isOn ? 0 : 1)
-    }
-    
-    private func animate(onAlpha: CGFloat, offAlpha: CGFloat) {
-        UIView.animate(withDuration: 0.3) {
-            self.layoutIfNeeded()
-            self.offLabel.alpha = offAlpha
-            self.redView.alpha = offAlpha
-            self.onLabel.alpha = onAlpha
-            self.greenView.alpha = onAlpha
-        }
+        animate(duration: 0.3, onAlpha: isOn ? 1 : 0, offAlpha: isOn ? 0 : 1)
     }
 }
 

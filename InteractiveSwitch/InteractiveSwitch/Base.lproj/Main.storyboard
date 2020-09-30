@@ -22,11 +22,37 @@
                                     <constraint firstAttribute="height" constant="68" id="EFz-B0-iPJ"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="apQ-C0-Rnk" customClass="InteractiveSwitchWithAnimator" customModule="InteractiveSwitch" customModuleProvider="target">
+                                <rect key="frame" x="40" y="233" width="334" height="68"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="68" id="pnI-NJ-qAK"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="With animator" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7d-tQ-2e1">
+                                <rect key="frame" x="40" y="195" width="107" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UIView.animate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ezu-ae-Ecn">
+                                <rect key="frame" x="40" y="385" width="118" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="9zb-a8-mbt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="5rO-4Q-cjE"/>
-                            <constraint firstItem="9zb-a8-mbt" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="tvS-2s-Xh3"/>
+                            <constraint firstItem="apQ-C0-Rnk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="189" id="Fxq-bd-WGO"/>
+                            <constraint firstItem="9zb-a8-mbt" firstAttribute="top" secondItem="ezu-ae-Ecn" secondAttribute="bottom" constant="8" id="Jc5-Rb-iC4"/>
+                            <constraint firstItem="apQ-C0-Rnk" firstAttribute="leading" secondItem="a7d-tQ-2e1" secondAttribute="leading" id="Jgq-Kc-jMI"/>
+                            <constraint firstItem="apQ-C0-Rnk" firstAttribute="trailing" secondItem="9zb-a8-mbt" secondAttribute="trailing" id="OvD-eP-UJD"/>
+                            <constraint firstItem="ezu-ae-Ecn" firstAttribute="leading" secondItem="9zb-a8-mbt" secondAttribute="leading" id="dAL-R4-QdF"/>
+                            <constraint firstItem="apQ-C0-Rnk" firstAttribute="leading" secondItem="9zb-a8-mbt" secondAttribute="leading" id="f66-d4-I0f"/>
+                            <constraint firstItem="apQ-C0-Rnk" firstAttribute="top" secondItem="a7d-tQ-2e1" secondAttribute="bottom" constant="17" id="tVy-IM-Hwt"/>
+                            <constraint firstItem="9zb-a8-mbt" firstAttribute="top" secondItem="apQ-C0-Rnk" secondAttribute="bottom" constant="113" id="u6R-LU-HPD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9zb-a8-mbt" secondAttribute="trailing" constant="40" id="uzN-P5-pBS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -34,7 +60,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="137.94642857142856"/>
+            <point key="canvasLocation" x="-390" y="123"/>
         </scene>
     </scenes>
 </document>
