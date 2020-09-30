@@ -152,14 +152,8 @@ final class InteractiveSwitch: UIControl {
             } else {
                 toggleViewConstraint?.constant = currentPosition + normalizedPositionChange
             }
+            animate(onAlpha: onAlpha, offAlpha: offAlpha)
 
-            UIView.animate(withDuration: 0.3) {
-                self.layoutIfNeeded()
-                self.offLabel.alpha = offAlpha
-                self.redView.alpha = offAlpha
-                self.onLabel.alpha = onAlpha
-                self.greenView.alpha = onAlpha
-            }
         case .ended:
             let isOn = onAlpha >= offAlpha
             self.isOn = isOn
@@ -173,12 +167,16 @@ final class InteractiveSwitch: UIControl {
         let constant = isOn ? endTogglePosition : 5
         self.toggleViewConstraint.constant = CGFloat(constant)
 
+        animate(onAlpha: isOn ? 1 : 0, offAlpha: isOn ? 0 : 1)
+    }
+    
+    private func animate(onAlpha: CGFloat, offAlpha: CGFloat) {
         UIView.animate(withDuration: 0.3) {
-            self.greenView.alpha = self.isOn ? 1 : 0
-            self.redView.alpha = self.isOn ? 0 : 1
-            self.offLabel.alpha = self.isOn ? 0 : 1
-            self.onLabel.alpha = self.isOn ? 1 : 0
             self.layoutIfNeeded()
+            self.offLabel.alpha = offAlpha
+            self.redView.alpha = offAlpha
+            self.onLabel.alpha = onAlpha
+            self.greenView.alpha = onAlpha
         }
     }
 }
